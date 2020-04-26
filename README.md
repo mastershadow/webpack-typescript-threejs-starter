@@ -1,2 +1,2 @@
 # A starter kit for Three.js with Webpack and Typescript
-Eduard Roccatello [https://www.roccatello.it]
+Eduard Roccatello http://www.roccatello.it
