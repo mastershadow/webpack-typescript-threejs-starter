@@ -2,31 +2,39 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>CHANGE ME</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CHANGE ME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      overflow: hidden;
-    }
+        html {
+            height: 100%;
+        }
 
-    canvas {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-    }
-  </style>
+        body {
+            overflow: hidden;
+            height: 100%;
+        }
+
+        #canvaswrapper,
+        #renderingcanvas {
+            height: 100%;
+            width: 100%;
+        }
+
+    </style>
 </head>
 
 <body>
-  <canvas id="renderingcanvas"></canvas>
-  <script src="dist/main.js"></script>
+    <div id="canvaswrapper">
+        <canvas id="renderingcanvas"></canvas>
+    </div>
+    <script src="dist/main.js"></script>
 </body>
 
 </html>

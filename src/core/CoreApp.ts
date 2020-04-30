@@ -18,6 +18,7 @@ export abstract class CoreApp {
     protected _camera!: PerspectiveCamera;
     protected _renderer!: WebGLRenderer;
     protected _canvasElement!: HTMLCanvasElement;
+    protected _canvasWrapperElement!: HTMLElement;
 
     protected far: number = 10000;
     protected near: number = 0.1;
@@ -25,6 +26,7 @@ export abstract class CoreApp {
     protected cameraPosition: Vector3 = new Vector3(0, 100, 400);
     protected cameraLookAt: Vector3 = new Vector3(0, 0, 0);
     protected canvasId: string = 'renderingcanvas';
+    protected canvasWrapperId: string = 'canvaswrapper';
     protected antialias: boolean = true;
     protected showLightHelpers: boolean = true;
     protected clearColor: Color = new Color(0x222222);
@@ -32,39 +34,48 @@ export abstract class CoreApp {
     protected abstract afterInit(): void;
     protected abstract update(): void;
 
+    protected resizeTimeout: number = 100;
+    protected resizeTimeoutHandle: number | null = null;
+
     public constructor() {
         this.beforeInit();
+        this._canvasElement = document.getElementById(
+            this.canvasId
+        ) as HTMLCanvasElement;
+
+        this._canvasWrapperElement = document.getElementById(
+            this.canvasWrapperId
+        ) as HTMLCanvasElement;
         this._scene = new Scene();
         this.initCamera();
         this.initRenderer();
         this.initLighting();
 
         this.initResizeObserver();
-        this.adjustCanvasSize();
 
         this.afterInit();
     }
 
-    // TODO
     protected initResizeObserver() {
         const ro = new ResizeObserver((entries, observer) => {
-            console.log('Elements resized:', entries.length);
             entries.forEach((entry, index) => {
                 const {
                     inlineSize: width,
                     blockSize: height,
                 } = entry.contentBoxSize[0];
-                console.log(`Element ${index + 1}:`, `${width}x${height}`);
+                if (this.resizeTimeoutHandle != null) {
+                    window.clearTimeout(this.resizeTimeoutHandle);
+                }
+                this.resizeTimeoutHandle = window.setTimeout(() => {
+                    this.adjustCanvasSize(width, height);
+                    this.resizeTimeoutHandle = null;
+                }, this.resizeTimeout);
             });
         });
-        ro.observe(this.canvasElement);
+        ro.observe(this.canvasWrapperElement);
     }
 
     protected initRenderer() {
-        this._canvasElement = document.getElementById(
-            this.canvasId
-        ) as HTMLCanvasElement;
-
         this._renderer = new WebGLRenderer({
             antialias: this.antialias,
             canvas: this.canvasElement,
@@ -123,10 +134,10 @@ export abstract class CoreApp {
         this.camera.lookAt(this.cameraLookAt);
     }
 
-    protected adjustCanvasSize() {
-        this.renderer.setSize(innerWidth, innerHeight);
+    protected adjustCanvasSize(w: number, h: number) {
+        this.renderer.setSize(w, h);
         if (this.camera instanceof PerspectiveCamera) {
-            this.camera.aspect = innerWidth / innerHeight;
+            this.camera.aspect = w / h;
             this.camera.updateProjectionMatrix();
         }
     }
@@ -143,6 +154,10 @@ export abstract class CoreApp {
 
     public get canvasElement(): HTMLCanvasElement {
         return this._canvasElement;
+    }
+
+    public get canvasWrapperElement(): HTMLElement {
+        return this._canvasWrapperElement;
     }
 
     public get camera(): Camera {
