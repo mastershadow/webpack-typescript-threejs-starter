@@ -9,7 +9,7 @@ import {
     HemisphereLightHelper,
     DirectionalLight,
     DirectionalLightHelper,
-} from "three";
+} from 'three';
 
 import { ResizeObserver } from '@juggle/resize-observer';
 
@@ -19,12 +19,12 @@ export abstract class CoreApp {
     protected _renderer!: WebGLRenderer;
     protected _canvasElement!: HTMLCanvasElement;
 
-    protected far:number = 10000;
-    protected near:number = 0.1;
-    protected fov:number = 45;
+    protected far: number = 10000;
+    protected near: number = 0.1;
+    protected fov: number = 45;
     protected cameraPosition: Vector3 = new Vector3(0, 100, 400);
     protected cameraLookAt: Vector3 = new Vector3(0, 0, 0);
-    protected canvasId: string = "renderingcanvas";
+    protected canvasId: string = 'renderingcanvas';
     protected antialias: boolean = true;
     protected showLightHelpers: boolean = true;
     protected clearColor: Color = new Color(0x222222);
@@ -50,10 +50,12 @@ export abstract class CoreApp {
         const ro = new ResizeObserver((entries, observer) => {
             console.log('Elements resized:', entries.length);
             entries.forEach((entry, index) => {
-              const { inlineSize: width, blockSize: height } = entry.contentBoxSize[0];
-              console.log(`Element ${index + 1}:`, `${width}x${height}`);
+                const {
+                    inlineSize: width,
+                    blockSize: height,
+                } = entry.contentBoxSize[0];
+                console.log(`Element ${index + 1}:`, `${width}x${height}`);
             });
-
         });
         ro.observe(this.canvasElement);
     }
